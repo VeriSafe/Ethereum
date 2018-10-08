@@ -1,43 +1,49 @@
-pragma solidity ^0.4.29;
+// solium-disable linebreak-style
+pragma solidity ^0.4.24;
 
-import "https://github.com/Cpollo/openzeppelin-solidity/contracts/access/Roles.sol";
+import "openzeppelin-solidity/contracts/access/Roles.sol";
+import "./ICpolloRoles.sol";
 
-contract CpolloRole {
-  using Roles for Roles.Role;
+contract LegalRole {
+    using Roles for Roles.Role;
 
-  event CpolloAdded(address indexed account);
-  event CpolloRemoved(address indexed account);
+    event LegalAdded(address indexed account);
+    event LegalRemoved(address indexed account);
+    
+    Roles.Role private _legals;
+    ICpolloRoles _cpollo;
 
-  Roles.Role private cpollos;
+    constructor(ICpolloRoles cpollo) public {
+        _cpollo = cpollo;
+    }
 
-  constructor() public {
-    _addCpollo(msg.sender);
-  }
+    modifier onlyCpollo() {
+        require(_cpollo.isCpollo(msg.sender), "Only Cpollo Members allowed");
+        _;
+    }
 
-  modifier onlyCpollo() {
-    require(isCpollo(msg.sender), "Only Cpollo Members allowed");
-    _;
-  }
+    function isLegal(address account) public view returns (bool) {
+        return _legals.has(account);
+    }
 
-  function isCpollo(address account) public view returns (bool) {
-    return cpollos.has(account);
-  }
+    function addLegal(address account) public onlyCpollo {
+        _addLegal(account);
+    }
 
-  function addCpollo(address account) public onlyCpollo {
-    _addCpollo(account);
-  }
+    function renounceLegal() public {
+        _removeLegal(msg.sender);
+    }
+    function removeLegal() public onlyCpollo {
+        _removeLegal(msg.sender);
+    }
 
-  function renounceCpollo() public {
-    _removeCapper(msg.sender);
-  }
+    function _addLegal(address account) internal {
+        _legals.add(account);
+        emit LegalAdded(account);
+    }
 
-  function _addCpollo(address account) internal {
-    cpollos.add(account);
-    emit CpolloAdded(account);
-  }
-
-  function _removeCpollo(address account) internal {
-    cpollos.remove(account);
-    emit CpolloRemoved(account);
-  }
+    function _removeLegal(address account) internal {
+        _legals.remove(account);
+        emit LegalRemoved(account);
+    }
 }

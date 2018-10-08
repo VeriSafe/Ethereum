@@ -1,6 +1,7 @@
-pragma solidity ^0.4.29;
+// solium-disable linebreak-style
+pragma solidity ^0.4.24;
 
-import "openzeppelin-solidity/contracts/access/rbac/Roles.sol";
+import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "./ICpolloRoles.sol";
 
 contract ManagerRole {

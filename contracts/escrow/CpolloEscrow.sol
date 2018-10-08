@@ -1,6 +1,7 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "./TokenEscrow.sol";
+import "./BaseEscrow.sol";
 import "../access/ICpolloRoles.sol";
 /**
  * @title CpolloEscrow
@@ -15,9 +16,9 @@ contract CpolloEscrow is BaseEscrow {
 
     ICpolloRoles _cpollo;
     State private _state;
-    address private _teamWallet;
+    address internal _teamWallet;
 
-    constructor(address teamWallet, ICpolloRoles cpollo) public {
+    constructor(address teamWallet, ICpolloRoles cpollo) {
         require(teamWallet != address(0), "Team Wallet can not be 0");
         _state = State.Active;
         _teamWallet = teamWallet;
@@ -64,6 +65,12 @@ contract CpolloEscrow is BaseEscrow {
         _state = State.Active;
         emit unFreezeAlert(msg.sender);
     } 
+
+    function _preTransfer(address payee, uint256 amount) internal {
+        super._preTransfer(payee, amount);
+        require(_state == State.Active, "Escrow must be active");
+    }
+
       /**
     * @dev Must Override. Where the funds are transfered when Scam happens.
     */

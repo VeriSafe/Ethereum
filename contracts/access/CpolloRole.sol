@@ -1,7 +1,8 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.29;
 
 
-import "openzeppelin-solidity/contracts/access/rbac/Roles.sol";
+import "openzeppelin-solidity/contracts/access/Roles.sol";
 
 contract CpolloRole {
     using Roles for Roles.Role;
@@ -33,7 +34,7 @@ contract CpolloRole {
     }
 
     function _addCpollo(address account) internal {
-        cpollos.add(account);
+        _cpollos.add(account);
         emit CpolloAdded(account);
     }
 

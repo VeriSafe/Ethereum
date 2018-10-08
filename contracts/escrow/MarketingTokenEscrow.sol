@@ -1,24 +1,26 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
 import "./TokenEscrow.sol";
-import "../access/ICpolloRoles.sol";
-import "../access/DevRoles.sol";
+import "../access/IMarketingRoles.sol";
+
 /**
  * @title DevTokenEscrow
- * @dev Escrow that holds funds for development, only registered Devs are allowed to receive token funds,
+ * @dev Escrow that holds funds for Marketing, only registered Marketeers are allowed to receive token funds,
  * when there are signals of Scam, Cpollo will freeze the funds to start auditing. If these signals are right, 
  * Cpollo will return funds to the team wallet.
  */
-contract DevTokenEscrow is TokenEscrow {
+contract MarketingTokenEscrow is TokenEscrow {
 
-    constructor(IDevRoles dev ) public {
-        _dev = dev;
+    IMarketingRoles private _marketeer;
+    
+    constructor(IMarketingRoles marketeer ) public {
+        _marketeer = marketeer;
     }
 
-    function _preTransfer(payee, amount) private {
+    function _preTransfer(address payee, uint256 amount) private {
         super._preTransfer(payee, amount);
-        require(_state == State.Active, "Escrow must be active");
-        require(_dev.isDev(payee), "Only Devs allowed to receive funds");
+        require(_marketeer.isMarketeer(payee), "Only Marketeers allowed to receive funds");
     }
 
  

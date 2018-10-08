@@ -1,7 +1,8 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.29;
 
 
-import "openzeppelin-solidity/contracts/access/rbac/Roles.sol";
+import "openzeppelin-solidity/contracts/access/Roles.sol";
 
 contract EscrowManagerRole {
     using Roles for Roles.Role;
@@ -9,7 +10,7 @@ contract EscrowManagerRole {
     event EscrowManagerAdded(address indexed account);
     event EscrowManagerRemoved(address indexed account);
 
-    Roles.Role private _escrowManager;
+    Roles.Role internal _escrowManager;
 
     constructor(address manager) public {
         _addEscrowManager(manager);

@@ -1,11 +1,11 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "../math/SafeMath.sol";
-import "../ownership/Secondary.sol";
+
 import "../access/EscrowManagerRole.sol";
-import "../BaseEscrow.sol";
+import "./BaseEscrow.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/access/rbac/Roles.sol";
 /**
  * @title LimitedEscrow
  * @dev Base escrow contract, holds token funds destinated to a role until they
@@ -17,9 +17,9 @@ contract LimitedEscrow is BaseEscrow {
     using SafeMath for uint256;
  
     // Total Amount Payed in timestamp Interval
-    uint256 private _AmountPayedInInterval;
+    uint256 private _amountPayedInInterval;
     // Total Tokens Payement limit
-    uint256 private _AmountPayedLimit;
+    uint256 private _amountPayedLimit;
     // Timestamp interval where tokens payed back to zero
     uint256 private _timestampInterval;
     // The last time where funds where resetted
@@ -28,7 +28,7 @@ contract LimitedEscrow is BaseEscrow {
     event LimitChanged(address indexed account, uint256 indexed newLimit);
     event TimestampIntervalChanged(address indexed account, uint256 indexed newTimestampInvterval);
 
-      /**
+   /**
    * @dev 
    * @param tokensLimit Max token value we can spend at each timestampInterval
    * @param timestampInterval Timestamp interval to reset token limit
@@ -36,7 +36,7 @@ contract LimitedEscrow is BaseEscrow {
     constructor(uint256 amountLimit, uint256 timestampInterval) public { 
         require(amountLimit >0);
         require(timestampInterval > 0 );
-        _AmountPayedLimitt = amountLimit;
+        _amountPayedLimit = amountLimit;
         _timestampInterval = timestampInterval;
         _timestampNow = block.timestamp;
     }
@@ -47,9 +47,9 @@ contract LimitedEscrow is BaseEscrow {
    * executed entirely.
    */
     function _preTransfer(address payee, uint256 amount) internal {
-        super._preTransfer(paye, amount);
-        require(_AmountPayedInInterval.add(amount) < _AmountPayedLimit, "Limit Amount passed");
-        _AmountPayedInInterval = _AmountPayedInInterval.add(amount);
+        super._preTransfer(payee, amount);
+        require(_amountPayedInInterval.add(amount) < _amountPayedLimit, "Limit Amount passed");
+        _amountPayedInInterval = _amountPayedInInterval.add(amount);
         
     }
      /**
@@ -58,7 +58,7 @@ contract LimitedEscrow is BaseEscrow {
     function resetAmountTotalPayments(address payee, uint256 amount) public {      
         require(_timestampNow.add(_timestampInterval) < block.timestamp, "Not enough time passed");
         _timestampNow = block.timestamp;
-        _AmountPayedInInterval = 0;
+        _amountPayedInInterval = 0;
     }
     
     /**
@@ -66,14 +66,14 @@ contract LimitedEscrow is BaseEscrow {
     */
     function changeAmountLimit(uint256 newLimit) public onlyEscrowManager  {      
         _amountPayedLimit = newLimit;
-        emit LimitChanged(msg.send, newLimit);
+        emit LimitChanged(msg.sender, newLimit);
     }
       /**
     * @dev Change the token interval timestamp limit
     */
     function changeTimestampInterval(uint256 newTimestampInvterval) public onlyEscrowManager  {      
         _timestampInterval = newTimestampInvterval;
-        emit TimestampIntervalChanged(msg.send, newTimestampInvterval);
+        emit TimestampIntervalChanged(msg.sender, newTimestampInvterval);
     }
 
 

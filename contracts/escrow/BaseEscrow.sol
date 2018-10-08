@@ -1,9 +1,11 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "../math/SafeMath.sol";
+
 import "../access/EscrowManagerRole.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/access/rbac/Roles.sol";
+
 /**
  * @title BaseEscrow
  * @dev Base escrow with Management role
@@ -15,8 +17,10 @@ contract BaseEscrow is EscrowManagerRole {
     
     event Transfered(address indexed payee, address indexed payeedBy, uint256 tokenAmount);
 
-    mapping(address => uint256) private _transfers;
+    mapping(address => uint256) internal _transfers;
+    constructor(address manager) EscrowManagerRole(manager) public {
 
+    }
 
     function transfersOf(address payee) public view returns (uint256) {
         return _transfers[payee];
@@ -37,8 +41,8 @@ contract BaseEscrow is EscrowManagerRole {
    * executed entirely.
    */
     function _preTransfer(address payee, uint256 amount) internal {
-        require(beneficiary != address(0));
-        require(weiAmount != 0);
+        require(payee != address(0));
+        require(amount != 0);
     }
      /**
    * @dev Needs to be overriden. The overriding function

@@ -1,18 +1,17 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.24;
-
-import "../math/SafeMath.sol";
 
 import "./LimitedEscrow.sol";
 import "./CpolloEscrow.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "openzeppelin-solidity/contracts/access/rbac/Roles.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
+
 /**
  * @title EthEscrow
  * @dev Base escrow contract that holds token funds destinated to a role. 
  * Only Escrow managers can transfer funds
  * 
  */
-contract EthEscrow is LimitedEscrow, CpolloEscrow {
+contract EthEscrow is CpolloEscrow {
  
     using SafeMath for uint256;
      /**
