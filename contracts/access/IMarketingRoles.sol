@@ -4,8 +4,8 @@ pragma solidity ^0.4.24;
 
 /**
  * @title MarketingRoles interface 
- * @dev 
+ * @dev IMarketingRoles interface is used to check if the given address belongs to a marketeer
  */
 interface IMarketingRoles {
-   function isMarketing(address account) external  view returns (bool);
+   function isMarketeer(address account) external  view returns (bool);
 }

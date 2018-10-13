@@ -14,10 +14,10 @@ contract VestedPostDeliveryCrowdsale is TimedCrowdsale {
     using SafeMath for uint256;
 
    
-    uint256 private vestedTime1;
-    uint256 private vestedTime2;
-    uint256 private vestedTime3;
-    uint256 private vestedTime4;
+    uint256 private _vestedTime1;
+    uint256 private _vestedTime2;
+    uint256 private _vestedTime3;
+    uint256 private _vestedTime4;
     uint256 private _capToken1;
     uint256 private _capToken2;
     uint256 private _capToken3;
@@ -27,20 +27,26 @@ contract VestedPostDeliveryCrowdsale is TimedCrowdsale {
     mapping(address => uint256) private _balances;
     /**
     * @dev Constructor, takes crowdsale opening and closing times.
-    * @param openingTime Crowdsale opening time
-    * @param closingTime Crowdsale closing time
     */
     constructor(uint256 vestedTime1, uint256 vestedTime2, uint256 vestedTime3, uint256 vestedTime4
             , uint256 capToken1, uint256 capToken2, uint256 capToken3, uint256 capToken4) public {
-
-
-        require(vestedTime1 >= closingTime);
+        require(vestedTime1 >= closingTime());
         require(vestedTime2 >= vestedTime1);
         require(vestedTime3 >= vestedTime2);
         require(vestedTime4 >= vestedTime3);
+        _vestedTime1 = vestedTime1;
+        _vestedTime2 = vestedTime2;
+        _vestedTime3 = vestedTime3;
+        _vestedTime4 = vestedTime4;
+        _capToken1 = capToken1;
+        _capToken2 = capToken2;
+        _capToken3 = capToken3;
+        _capToken4 = capToken3;
+
+
+
+
     }
-
-
 
     /**
     * @dev Withdraw tokens only after crowdsale ends.
@@ -53,10 +59,10 @@ contract VestedPostDeliveryCrowdsale is TimedCrowdsale {
         uint256 totalTokenAmount = _totalTokenCap;
         totalTokenAmount = totalTokenAmount.add(amount);
         require(
-        (vestedTime1 >= block.timestamp && totalTokenAmount <= _capToken1) ||
-        (vestedTime2 >= block.timestamp && totalTokenAmount <= _capToken2) ||
-        (vestedTime3 >= block.timestamp && totalTokenAmount <= _capToken3) ||
-        (vestedTime4 >= block.timestamp && totalTokenAmount <= _capToken4) 
+        (_vestedTime1 >= block.timestamp && totalTokenAmount <= _capToken1) ||
+        (_vestedTime2 >= block.timestamp && totalTokenAmount <= _capToken2) ||
+        (_vestedTime3 >= block.timestamp && totalTokenAmount <= _capToken3) ||
+        (_vestedTime4 >= block.timestamp && totalTokenAmount <= _capToken4) 
         );
 
         _totalTokenCap = _totalTokenCap.add(amount);

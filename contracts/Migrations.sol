@@ -1,3 +1,4 @@
+// solium-disable linebreak-style
 pragma solidity ^0.4.8;
 
 contract Migrations {
@@ -10,7 +11,7 @@ contract Migrations {
         if (msg.sender == owner) _;
     }
 
-    function Migrations() {
+    constructor() {
         owner = msg.sender;
     }
 

@@ -4,7 +4,7 @@ pragma solidity ^0.4.24;
 
 /**
  * @title DevRoles interface 
- * @dev To be called when only devs are allowed
+ * @dev IDevRoles interface is used to check if the given address belongs to a dev
  */
 interface IDevRoles {
    function isDev(address account) external  view returns (bool);

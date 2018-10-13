@@ -1,10 +1,12 @@
 // solium-disable linebreak-style
-pragma solidity ^0.4.29;
-
+pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 
-contract EscrowManagerRole {
+import "./BaseEscrow.sol";
+
+
+contract EscrowManagerRole is BaseEscrow {
     using Roles for Roles.Role;
 
     event EscrowManagerAdded(address indexed account);
@@ -37,9 +39,25 @@ contract EscrowManagerRole {
         _escrowManager.add(account);
         emit EscrowManagerAdded(account);
     }
-
+    /**
+    * @dev Can be overriden. The overriding function
+    * should call super._removeEscrowManager(account) to ensure the chain of transfer is
+    * executed entirely.
+   */
     function _removeEscrowManager(address account) internal {
         _escrowManager.remove(account);
         emit EscrowManagerRemoved(account);
     }
+     /**
+   * @dev Can be overridden to add pre transfer logic. The overriding function
+   * should call super._preTransfer(payed, amount) to ensure the chain of transfer is
+   * executed entirely.
+   */
+    function _preTransfer(address payee, uint256 amount) internal {
+        super._preTransfer(payee, amount);
+        require(_escrowManager.has(msg.sender), "You must be a Escrow Manager to do transfers in this Escrow");      
+    }
+
+
+
 }

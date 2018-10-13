@@ -3,7 +3,11 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "./ICpolloRoles.sol";
-
+/**
+ * @title ManagerRole
+ * @dev ManagerRole role is a public registry of all manager members. Manager members can receive funds from manager escrow's.  Only Cpollo members can
+ * add managers to the public registry.
+ */
 contract ManagerRole {
     using Roles for Roles.Role;
 

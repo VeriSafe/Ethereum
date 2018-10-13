@@ -4,6 +4,11 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "./ICpolloRoles.sol";
 
+/**
+ * @title LegalRole
+ * @dev LegalRole role is a public registry of all legal members.Legal members can receive funds from legal escrow's.  Only Cpollo members can
+ * add legals to the public registry.
+ */
 contract LegalRole {
     using Roles for Roles.Role;
 

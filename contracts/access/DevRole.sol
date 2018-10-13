@@ -1,9 +1,13 @@
 // solium-disable linebreak-style
-pragma solidity ^0.4.29;
+pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "./ICpolloRoles.sol";
-
+/**
+ * @title DevRole
+ * @dev DevRole role is a public registry of all developer members. Developer members can receive funds from development escrow's. Only Cpollo members can
+ * add developers to the public registry.
+ */
 contract DevRole {
     using Roles for Roles.Role;
 
@@ -33,8 +37,8 @@ contract DevRole {
     function renounceDev() public {
         _removeDev(msg.sender);
     }
-    function removeDev() public onlyCpollo {
-        _removeDev(msg.sender);
+    function removeDev(address account) public onlyCpollo {
+        _removeDev(account);
     }
 
     function _addDev(address account) internal {

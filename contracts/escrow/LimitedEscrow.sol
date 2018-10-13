@@ -2,16 +2,13 @@
 pragma solidity ^0.4.24;
 
 
-import "../access/EscrowManagerRole.sol";
+//import "./EscrowManagerRole.sol";
 import "./BaseEscrow.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 /**
  * @title LimitedEscrow
- * @dev Base escrow contract, holds token funds destinated to a role until they
- * withdraw them. The contract that uses the escrow as its payment method
- * should be its primary, and provide public methods redirecting to the escrow's
- * deposit and withdraw.
+ * @dev A limited escrow contract hold funds and limits them to a defined period of time set by the timestamp. 
  */
 contract LimitedEscrow is BaseEscrow {
     using SafeMath for uint256;
@@ -30,7 +27,7 @@ contract LimitedEscrow is BaseEscrow {
 
    /**
    * @dev 
-   * @param tokensLimit Max token value we can spend at each timestampInterval
+   * @param amountLimit Max amount value we can spend at each timestampInterval
    * @param timestampInterval Timestamp interval to reset token limit
    */
     constructor(uint256 amountLimit, uint256 timestampInterval) public { 
@@ -55,26 +52,36 @@ contract LimitedEscrow is BaseEscrow {
      /**
    * @dev Call to reset amount payed, and then Escrow can do more Payments
    */
-    function resetAmountTotalPayments(address payee, uint256 amount) public {      
+    function resetAmountTotalPayments() public {      
         require(_timestampNow.add(_timestampInterval) < block.timestamp, "Not enough time passed");
         _timestampNow = block.timestamp;
         _amountPayedInInterval = 0;
     }
     
-    /**
+    /** TODO - Investigate if its better allow change limits by Escrow Manager or only by
+    * Cpollo 
     * @dev Change the Amount limit
-    */
-    function changeAmountLimit(uint256 newLimit) public onlyEscrowManager  {      
+    
+    function changeAmountLimit(uint256 newLimit) public onlyEscrowManager  { 
+        require(amountLimit > 0, "Amount limit can not be under zero ");  
+        _preChangeAmountLimit(newLimit);
         _amountPayedLimit = newLimit;
         emit LimitChanged(msg.sender, newLimit);
-    }
+    }*/
       /**
     * @dev Change the token interval timestamp limit
-    */
-    function changeTimestampInterval(uint256 newTimestampInvterval) public onlyEscrowManager  {      
+    *
+    function changeTimestampInterval(uint256 newTimestampInvterval) public onlyEscrowManager  {  
+        require(timestampInterval > 0, "timestampInterval can not be under zero ");   
+         _preChangeTimestampInterval(newTimestampInvterval);
         _timestampInterval = newTimestampInvterval;
         emit TimestampIntervalChanged(msg.sender, newTimestampInvterval);
     }
+    function _preChangeAmountLimit(uint256 newLimit) internal ;
+    function _preChangeTimestampInterval(uint256 newTimestampInvterval) internal ;
+    
+
+    */
 
 
 }

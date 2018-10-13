@@ -3,7 +3,11 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 import "./ICpolloRoles.sol";
-
+/**
+ * @title MarketingRole
+ * @dev  MarketingRole role is a public registry of all marketing members.  Marketing members can receive funds from manager escrow's.  Only Cpollo members can
+ * add marketing to the public registry.
+ */
 contract MarketingRole {
     using Roles for Roles.Role;
 
@@ -33,8 +37,8 @@ contract MarketingRole {
     function renounceMarketing() public {
         _removeMarketing(msg.sender);
     }
-    function removeMarketing() public onlyCpollo {
-        _removeMarketing(msg.sender);
+    function removeMarketing(address account) public onlyCpollo {
+        _removeMarketing(account);
     }
 
     function _addMarketing(address account) internal {

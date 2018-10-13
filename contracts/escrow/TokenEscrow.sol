@@ -1,9 +1,6 @@
 // solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-
-
-import "./LimitedEscrow.sol";
 import "./CpolloEscrow.sol";
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
@@ -11,8 +8,7 @@ import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 /**
  * @title TokenEscrow
- * @dev Base escrow contract that holds token funds destinated to a role. 
- * Only Escrow managers can transfer funds
+ * @dev Escrow contract that holds token funds for a specific role. Only Escrow managers can transfer funds.
  * 
  */
 contract TokenEscrow is CpolloEscrow {
@@ -23,10 +19,11 @@ contract TokenEscrow is CpolloEscrow {
   /**
    * @param token Address of the token 
    */
-    constructor(IERC20 token) public { 
+    constructor( IERC20 token) public { 
         require(token != address(0), "Token can not be null");
         _token = token;
     }
+  
 
     /**
     * @dev Transfer tokens to destination payed
@@ -34,14 +31,14 @@ contract TokenEscrow is CpolloEscrow {
     */
     function _transfer(address payee, uint256 amount) internal {
         _transfers[payee] = _transfers[payee].add(amount);
-        _token.safeTranfer(payee, amount);
+        _token.safeTransfer(payee, amount);
     }
     /**
     * @dev Transfer tokens funds back to team wallet when scam happens.
     */
     function _transferFundsScam() internal {
         uint256 totalTokenFunds = _token.balanceOf(this);
-        _token.safeTranfer(_teamWallet, totalTokenFunds);
+        _token.safeTransfer(_teamWallet, totalTokenFunds);
     }
 
 }

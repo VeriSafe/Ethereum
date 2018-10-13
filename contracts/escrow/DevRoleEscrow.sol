@@ -1,14 +1,14 @@
 // solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "./TokenEscrow.sol";
-import "../access/ICpolloRoles.sol";
+import "./BaseEscrow.sol";
 import "../access/IDevRoles.sol";
 /**
  * @title DevTokenEscrow
- * @dev Escrow that holds funds for development, only registered Devs are allowed to receive token funds,
- * when there are signals of Scam, Cpollo will freeze the funds to start auditing. If these signals are right, 
- * Cpollo will return funds to the team wallet.
+ * @dev This is the escrow that holds funds for development. 
+ * Only registered Developers are allowed to receive token funds.
+ *  When there are signals of a scam, Cpollo will freeze the funds and start the auditing process. 
+ * If the signals are determined to be correct, Cpollo will return funds to the team wallet.
  */
 contract DevRoleEscrow is BaseEscrow {
 

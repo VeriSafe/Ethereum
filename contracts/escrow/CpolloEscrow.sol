@@ -18,10 +18,10 @@ contract CpolloEscrow is BaseEscrow {
     State private _state;
     address internal _teamWallet;
 
-    constructor(address teamWallet, ICpolloRoles cpollo) {
-        require(teamWallet != address(0), "Team Wallet can not be 0");
-        _state = State.Active;
+    constructor(address teamWallet, ICpolloRoles cpollo) public {
+        require(teamWallet != address(0), "Team Wallet can not be 0");   
         _teamWallet = teamWallet;
+        _state = State.Active;
         _cpollo = cpollo;
     }
 
@@ -35,13 +35,13 @@ contract CpolloEscrow is BaseEscrow {
     function state() public view returns (State) {
         return _state;
     }
-
-    /**
+   /**
     * @return the team wallet where the funds will return when Scam happens
     */
     function refundWallet() public view returns (address) {
         return _teamWallet;
     }
+   
 
     /**
     * @dev Scam noticed by CPollo company, return all the funds to the team wallet
@@ -59,9 +59,10 @@ contract CpolloEscrow is BaseEscrow {
         emit FreezeAlert(msg.sender);
     } 
      /**
-    * @dev UnFreeze escrow when investigation finish.
+    * @dev UnFreeze escrow when investigation finish. Only Cpollo members can call
     */
     function unFreeze() public onlyCpollo {
+        require(_state == State.Freeze, "Escrow must be freezed");
         _state = State.Active;
         emit unFreezeAlert(msg.sender);
     } 
@@ -71,7 +72,7 @@ contract CpolloEscrow is BaseEscrow {
         require(_state == State.Active, "Escrow must be active");
     }
 
-      /**
+    /**
     * @dev Must Override. Where the funds are transfered when Scam happens.
     */
     function _transferFundsScam() internal;
