@@ -38,8 +38,8 @@ contract LegalRole {
     function renounceLegal() public {
         _removeLegal(msg.sender);
     }
-    function removeLegal() public onlyCpollo {
-        _removeLegal(msg.sender);
+    function removeLegal(address account) public onlyCpollo {
+        _removeLegal(acciou);
     }
 
     function _addLegal(address account) internal {
