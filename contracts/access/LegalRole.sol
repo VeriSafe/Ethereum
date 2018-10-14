@@ -39,7 +39,7 @@ contract LegalRole {
         _removeLegal(msg.sender);
     }
     function removeLegal(address account) public onlyCpollo {
-        _removeLegal(acciou);
+        _removeLegal(account);
     }
 
     function _addLegal(address account) internal {
