@@ -1,6 +1,6 @@
 {
   "name": "cpollo-ethereum-templates",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Secure Smart Contract templates for Cpollo platform",
   "files": [
     "build",

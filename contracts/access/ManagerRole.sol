@@ -37,8 +37,8 @@ contract ManagerRole {
     function renounceManager() public {
         _removeManager(msg.sender);
     }
-    function removeManager() public onlyCpollo {
-        _removeManager(msg.sender);
+    function removeManager(address account) public onlyCpollo {
+        _removeManager(account);
     }
 
     function _addManager(address account) internal {
