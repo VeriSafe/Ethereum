@@ -14,9 +14,4 @@ contract MarketingRoleMock is MarketingRole {
    
     function onlyMarketingMock() public view onlyCpollo {
     }
-    function removeMarketing(address account) public onlyCpollo{
-        _removeMarketing(account);
-    }
-  
-
 }

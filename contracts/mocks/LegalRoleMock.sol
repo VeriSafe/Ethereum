@@ -14,9 +14,4 @@ contract LegalRoleMock is LegalRole {
    
     function onlyLegalMock() public view onlyCpollo {
     }
-    function removeLegal(address account) public onlyCpollo{
-        _removeLegal(account);
-    }
-  
-
 }

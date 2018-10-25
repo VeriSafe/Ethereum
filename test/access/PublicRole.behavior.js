@@ -196,9 +196,6 @@ function shouldBehaveCpolloLikePublicRole (cpollo, authorized, otherAuthorized, 
   });
 }
 
-
-
-
 module.exports = {
   shouldBehaveLikePublicRole,
   shouldBehaveCpolloLikePublicRole,

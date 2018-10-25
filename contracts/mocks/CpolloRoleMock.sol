@@ -8,9 +8,4 @@ contract CpolloRoleMock is CpolloRole {
     function onlyCpolloMock() public view onlyCpollo {
     }
 
-    function removeCpollo(address account) public onlyCpollo {
-        _removeCpollo(account);
-    }
-  
-
 }

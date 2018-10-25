@@ -14,9 +14,5 @@ contract DevRoleMock is DevRole {
    
     function onlyDevMock() public view onlyCpollo {
     }
-    function removeDev(address account) public onlyCpollo{
-        _removeDev(account);
-    }
-  
 
 }
