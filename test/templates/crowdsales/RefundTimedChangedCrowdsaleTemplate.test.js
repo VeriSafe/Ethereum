@@ -5,13 +5,21 @@ const time = require('../../helpers/time');
 const { ethGetBalance } = require('../../helpers/web3');
 const expectEvent = require('../../helpers/expectEvent');
 
+const {  shouldBehaveLikeCrowdsale } = require('./behaviors/Crowdsale.behavior');
+const {  shouldBehaveLikeFinalizableCrowdsale } = require('./behaviors/FinalizableCrowdsale.behavior');
+const {  shouldBehaveLikePostDeliveryCrowdsale } = require('./behaviors/PostDeliveryCrowdsale.behavior');
+const {  shouldBehaveLikeRefundableCrowdsale } = require('./behaviors/RefundableCrowdsale.behavior');
+const {  shouldBehaveLikeCappedCrowdsale } = require('./behaviors/CappedCrowdsale.behavior');
+const {  shouldBehaveLikeTimedCrowdsale } = require('./behaviors/TimedCrowdsale.behavior');
+const {  shouldBehaveLikeTimedChangeCrowdsale } = require('./behaviors/TimedChangeCrowdsale.behavior');
+
 const BigNumber = web3.BigNumber;
 
 require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-const RefundTimedChangedCrowdsaleTemplate = artifacts.require('RefundTimedChangedCrowdsaleTemplate');
+const RefundTimedChangeCrowdsaleTemplate = artifacts.require('RefundTimedChangeCrowdsaleTemplate');
 const BurnERC20Template = artifacts.require('BurnERC20Template');
 
 contract('RefundTimedChangedCrowdsaleTemplate', function ([_, wallet, investor, purchaser, owner, anyone]) {
@@ -19,6 +27,7 @@ contract('RefundTimedChangedCrowdsaleTemplate', function ([_, wallet, investor, 
   const goal = ether(50);
   const lessThanGoal = ether(45);
   const hardGoal = ether(300);
+  const lessThanHardGoal = ether(250);
   const value = ether(42);
   const tokenSupply = new BigNumber('1e22');
   const initialBalance = 100000;
@@ -40,7 +49,32 @@ contract('RefundTimedChangedCrowdsaleTemplate', function ([_, wallet, investor, 
     this.token = await BurnERC20Template.new(_name, _symbol, _decimals, owner, initialBalance, { from: owner });;
   });
 
-  it('rejects a goal of zero', async function () {
+  context('with Template crowdsale', function () {
+    beforeEach(async function () {
+      this.crowdsale = await RefundTimedChangeCrowdsaleTemplate.new(
+        this.openingTime, this.closingTime, rate, wallet, this.token.address, goal, hardGoal, { from: owner }
+      );
+
+      await this.token.transfer(this.crowdsale.address, tokenSupply, { from: owner } );
+    });
+
+    shouldBehaveLikeFinalizableCrowdsale(anyone);
+    shouldBehaveLikePostDeliveryCrowdsale(investor, purchaser, tokenSupply, value);
+    shouldBehaveLikeRefundableCrowdsale (investor, lessThanGoal, goal, wallet, anyone);
+    shouldBehaveLikeTimedCrowdsale(investor, purchaser,  value);
+    shouldBehaveLikeTimedChangeCrowdsale(owner);
+
+    context('after opening time', function () {
+      beforeEach(async function () {
+        await time.increaseTo(this.openingTime);
+      });
+      shouldBehaveLikeCrowdsale(investor,purchaser, tokenSupply, wallet, rate, value);
+      shouldBehaveLikeCappedCrowdsale(hardGoal, lessThanHardGoal);
+    });
+
+   });
+
+  /*it('rejects a goal of zero', async function () {
     await shouldFail.reverting(
       RefundTimedChangedCrowdsaleTemplate.new(this.openingTime, this.closingTime, rate, wallet, this.token.address, 0, 1)
     );
@@ -175,7 +209,7 @@ contract('RefundTimedChangedCrowdsaleTemplate', function ([_, wallet, investor, 
 
 
 
-  });
+  });*/
   
   
 });

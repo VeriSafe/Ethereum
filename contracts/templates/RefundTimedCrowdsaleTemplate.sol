@@ -19,7 +19,7 @@ contract RefundTimedCrowdsaleTemplate is RefundableCrowdsale, CappedCrowdsale, P
         uint256 closingTime,   // closing time in unix epoch seconds
         uint256 rate,         // rate, in TKNbits
         address wallet,       // wallet to send Ether
-        ERC20 token,          // the token
+        IERC20 token,          // the token
         uint256 goal,   // Minimum goal to reach
         uint256 cap          // total cap, in wei
     )

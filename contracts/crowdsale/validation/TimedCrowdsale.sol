@@ -9,8 +9,8 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 contract TimedCrowdsale is Crowdsale, Ownable {
     using SafeMath for uint256;
 
-    uint256 private openingTime;
-    uint256 private closingTime;
+    uint256 private _openingTime;
+    uint256 private _closingTime;
 
     event TimesChanged(uint256 startTime, uint256 endTime, uint256 oldStartTime, uint256 oldEndTime);
 
@@ -19,22 +19,35 @@ contract TimedCrowdsale is Crowdsale, Ownable {
     */
     modifier onlyWhileOpen {
         // solium-disable-next-line security/no-block-members
-        require(block.timestamp >= openingTime && block.timestamp <= closingTime);
+        require(block.timestamp >= _openingTime && block.timestamp <= _closingTime);
         _;
     }
 
     /**
     * @dev Constructor, takes crowdsale opening and closing times.
-    * @param _openingTime Crowdsale opening time
-    * @param _closingTime Crowdsale closing time
+    * @param openingTime Crowdsale opening time
+    * @param closingTime Crowdsale closing time
     */
-    constructor(uint256 _openingTime, uint256 _closingTime) public {
+    constructor(uint256 openingTime, uint256 closingTime) public {
         // solium-disable-next-line security/no-block-members
-        require(_openingTime >= block.timestamp);
-        require(_closingTime >= _openingTime);
+        require(openingTime >= block.timestamp);
+        require(closingTime >= openingTime);
 
-        openingTime = _openingTime;
-        closingTime = _closingTime;
+        _openingTime = openingTime;
+        _closingTime = closingTime;
+    }
+    /**
+    * @return the crowdsale opening time.
+    */
+    function openingTime() public view returns(uint256) {
+        return _openingTime;
+    }
+
+    /**
+    * @return the crowdsale closing time.
+    */
+    function closingTime() public view returns(uint256) {
+        return _closingTime;
     }
 
     /**
@@ -43,7 +56,14 @@ contract TimedCrowdsale is Crowdsale, Ownable {
     */
     function hasClosed() public view returns (bool) {
         // solium-disable-next-line security/no-block-members
-        return block.timestamp > closingTime;
+        return block.timestamp > _closingTime;
+    }
+    /**
+    * @return true if the crowdsale is open, false otherwise.
+    */
+    function isOpen() public view returns (bool) {
+        // solium-disable-next-line security/no-block-members
+        return block.timestamp >= _openingTime && block.timestamp <= _closingTime;
     }
 
     /**
@@ -61,57 +81,57 @@ contract TimedCrowdsale is Crowdsale, Ownable {
         super._preValidatePurchase(_beneficiary, _weiAmount);
     }
     
-    function setStartTime(uint256 _startTime) public onlyOwner {
+    function setStartTime(uint256 startTime) public onlyOwner {
         // only if CS was not started
-        require(block.timestamp < openingTime);
+        require(block.timestamp < _openingTime);
         // only move time to future
-        require(_startTime > openingTime);
-        require(_startTime < closingTime);
-        emit TimesChanged(_startTime, closingTime, openingTime, closingTime);
-        openingTime = _startTime;
+        require(startTime > _openingTime);
+        require(startTime < _closingTime);
+        emit TimesChanged(startTime, _closingTime, _openingTime, _closingTime);
+        _openingTime = startTime;
     }
     
 
     
-    function setEndTime(uint256 _endTime) public onlyOwner {
+    function setEndTime(uint256 endTime) public onlyOwner {
         // only if CS was not ended
-        require(block.timestamp < closingTime);
+        require(block.timestamp < _closingTime);
         // only if new end time in future
-        require(block.timestamp < _endTime);
-        require(_endTime > openingTime);
-        emit TimesChanged(openingTime, _endTime, openingTime, closingTime);
-        closingTime = _endTime;
+        require(block.timestamp < endTime);
+        require(endTime > _openingTime);
+        emit TimesChanged(_openingTime, endTime, _openingTime, _closingTime);
+        _closingTime = endTime;
     }
     
 
     
-    function setTimes(uint256 _startTime, uint256 _endTime) public onlyOwner {
-        require(_endTime > _startTime);
-        uint256 oldStartTime = openingTime;
-        uint256 oldEndTime = closingTime;
+    function setTimes(uint256 startTime, uint256 endTime) public onlyOwner {
+        require(endTime > startTime);
+        uint256 oldStartTime = _openingTime;
+        uint256 oldEndTime = _closingTime;
         bool changed = false;
-        if (_startTime != oldStartTime) {
-            require(_startTime > block.timestamp);
+        if (startTime != oldStartTime) {
+            require(startTime > block.timestamp);
             // only if CS was not started
             require(block.timestamp < oldStartTime);
             // only move time to future
-            require(_startTime > oldStartTime);
+            require(startTime > oldStartTime);
 
-            openingTime = _startTime;
+            _openingTime = startTime;
             changed = true;
         }
-        if (_endTime != oldEndTime) {
+        if (endTime != oldEndTime) {
             // only if CS was not ended
             require(block.timestamp < oldEndTime);
             // end time in future
-            require(block.timestamp < _endTime);
+            require(block.timestamp < endTime);
 
-            closingTime = _endTime;
+            _closingTime = endTime;
             changed = true;
         }
 
         if (changed) {
-            emit TimesChanged(openingTime, _endTime, openingTime, closingTime);
+            emit TimesChanged(startTime, endTime, oldStartTime, oldEndTime);
         }
     }
 

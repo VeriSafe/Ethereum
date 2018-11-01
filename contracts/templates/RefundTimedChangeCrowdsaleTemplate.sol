@@ -21,7 +21,7 @@ contract RefundTimedChangeCrowdsaleTemplate is RefundableCrowdsale, CappedCrowds
         uint256 closingTime,   // closing time in unix epoch seconds
         uint256 rate,         // rate, in TKNbits
         address wallet,       // wallet to send Ether
-        ERC20 token,          // the token
+        IERC20 token,          // the token
         uint256 cap,          // total cap, in wei
         uint256 goal   // closing time in unix epoch seconds
     )
@@ -29,7 +29,6 @@ contract RefundTimedChangeCrowdsaleTemplate is RefundableCrowdsale, CappedCrowds
     RefundableCrowdsale(goal)
     CappedCrowdsale(cap)
     TimedCrowdsale(openingTime, closingTime)
-    Ownable()
     Crowdsale(rate, wallet, token)
     {
         require(goal <= cap, "cap must be higher than goal");
