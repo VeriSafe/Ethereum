@@ -14,7 +14,7 @@ require('chai')
 function shouldBehaveLikeCrowdsale (investor, purchaser, tokenSupply, wallet, rate, value) {
     const expectedTokenAmount = rate.mul(value);
     context('With base Crowdsale', async function () {
-        before(async function () {
+          before(async function () {
             // Advance to the next block to correctly read time in the solidity "now" function interpreted by ganache
             await advanceBlock();
           });

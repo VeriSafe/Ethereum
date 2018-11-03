@@ -1,7 +1,8 @@
 const shouldFail = require('../../../helpers/shouldFail');
 const expectEvent = require('../../../helpers/expectEvent');
-const time = require('../../../helpers/time');
 const { ZERO_ADDRESS } = require('../../../helpers/constants');
+const { advanceBlock } = require('../../../helpers/advanceToBlock');
+const time = require('../../../helpers/time');
 const { ether } = require('../../../helpers/ether');
 const { ethGetBalance } = require('../../../helpers/web3');
 const BigNumber = web3.BigNumber;
