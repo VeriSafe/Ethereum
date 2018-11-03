@@ -6,8 +6,7 @@ import "openzeppelin-solidity/contracts/ownership/Secondary.sol";
  /**
  * @title Base Airdrop
  * @dev Base Airdrop contract, holds funds designated for a payee until they
- * withdraw them.
- * @dev Intended usage: Owner of aidrop transfer an amount of tokens to be Airdroped
+ * withdraw them. Intended usage: Owner of aidrop transfer an amount of tokens to be Airdroped
  */
 contract Airdrop is Secondary {
     using SafeMath for uint256;
@@ -61,21 +60,41 @@ contract Airdrop is Secondary {
 
         emit Withdrawn(sender, payment);
     }
-
+    /**
+   *
+   * @dev pre deposit logic
+   * @param payee Address of the sender to receive aidrop
+   * @param amount tokens to be deposited
+   */
     function _preDeposit(address payee, uint256 amount) internal {
         require(payee != address(0), "address can not be null");
         require(amount != 0, "amount can not be null");
     }
-
+      /**
+   *
+   * @dev deposit logic
+   * @param payee Address of the sender to receive aidrop
+   * @param amount tokens to be deposited
+   */
     function _deposit(address payee, uint256 amount) internal {
         _totalDeposits = _totalDeposits.add(amount);
         _deposits[payee] = _deposits[payee].add(amount);
     }
-
+     /**
+   *
+   * @dev withdraw logic
+   * @param sender Address of the sender to receive aidrop
+   * @param amount tokens to be withdrawed
+   */
     function _withdraw(address sender, uint256 amount) internal {
         _totalAirdrops = _totalAirdrops.add(amount);
     }
-
+   /**
+   *
+   * @dev pre withdraw logic
+   * @param sender Address of the sender to receive aidrop
+   * @param amount tokens to be withdrawed
+   */
     function _preWithdraw(address sender, uint256 amount) internal { 
         require(sender != address(0), "address can not be null");
         require(amount != 0, "amount can not be null");

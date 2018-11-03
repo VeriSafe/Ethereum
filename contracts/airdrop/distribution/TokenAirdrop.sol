@@ -32,6 +32,8 @@ contract TokenAirdrop is Airdrop {
     /**
    *
    * @dev Make sure Contract have sufficient funds to do withdraw
+   * @param sender Address of the sender to receive aidrop
+   * @param amount tokens to be withdrawed
    */
     function _preWithdraw(address sender, uint256 amount) internal { 
         require(tokenFunds() >= amount, "You must have sufficient tokens to do airdrop");
@@ -39,14 +41,16 @@ contract TokenAirdrop is Airdrop {
     }
    /**
     *
-    * @dev Withdraw token funds to sender. 
+    * @dev Withdraw token funds to sender.
+    * @param sender Address of the sender to receive aidrop
+    * @param amount tokens to be withdrawed 
     */
     function _withdraw(address sender, uint256 amount) internal {
         super._withdraw(sender, amount);
         _token.safeTransfer(sender, amount);
     }
     /**
-    * @dev Return not used tokens back to the owner
+    * @dev Return not used tokens back to the owner, only need to be used when Airdrop is finished
      */
     function claimFunds() public onlyPrimary {
         _token.safeTransfer(_wallet, _token.balanceOf(address(this)));

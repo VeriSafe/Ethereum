@@ -17,7 +17,10 @@ contract KYCAirdrop is Airdrop {
         _user = user;
     }
 
-
+     /**
+   * @param payee Address of the user who will receive airdrop
+   * @param amount tokens value to be received in airdrop
+   */
     function _preDeposit(address payee, uint256 amount) internal {
         super._preDeposit(payee, amount);
         require(_user.isUser(payee), "Only KYC users are allowed");
