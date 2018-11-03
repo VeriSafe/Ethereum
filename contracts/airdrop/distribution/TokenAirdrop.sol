@@ -17,6 +17,7 @@ contract TokenAirdrop is Airdrop {
     address private _wallet;
   /**
    * @param token Address of the token 
+   * @param wallet Address of the wallet to refund remain tokens
    */
     constructor( IERC20 token, address wallet) public { 
         require(token != address(0), "Token can not be null");
@@ -24,9 +25,13 @@ contract TokenAirdrop is Airdrop {
         _token = token;
         _wallet = wallet;
     }
+    /**
+   *
+   * @dev In order to deposit make sure Airdrop contract have sufficient token funds
+   */
     function _preDeposit(address sender, uint256 amount) internal { 
         super._preDeposit(sender, amount);
-        require(_totalDeposits.sub(_totalAirdrops) >= _token.balanceOf(address(this)), "You must have sufficient tokens to do airdrop");
+        require(_totalDeposits.sub(totalAirdrops()) >= _token.balanceOf(address(this)), "You must have sufficient tokens to do airdrop");
     }
 
     function _withdraw(address sender, uint256 amount) internal {

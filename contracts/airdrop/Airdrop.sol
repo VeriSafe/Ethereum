@@ -11,11 +11,11 @@ import "openzeppelin-solidity/contracts/ownership/Secondary.sol";
  */
 contract Airdrop is Secondary {
     using SafeMath for uint256;
-    uint256 internal _totalDeposits;
-    uint256 internal _totalAirdrops;
+    uint256 private _totalDeposits;
+    uint256 private _totalAirdrops;
 
-    event Deposited(address indexed payee, uint256 weiAmount);
-    event Withdrawn(address indexed payee, uint256 weiAmount);
+    event Deposited(address indexed payee, uint256 amount);
+    event Withdrawn(address indexed payee, uint256 amount);
 
     mapping(address => uint256) private _deposits;
 
