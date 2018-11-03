@@ -1,12 +1,12 @@
-const DevEthEscrowMock = artifacts.require('DevEthEscrowMock');
+const DevEthWalletMock = artifacts.require('DevEthWalletMock');
 const shouldFail = require('../helpers/shouldFail');
 const CpolloRole = artifacts.require('CpolloRole');
 const DevRole = artifacts.require('DevRole');
 const BigNumber = web3.BigNumber;
 const time = require('../helpers/time');
 const { ether } = require('../helpers/ether');
-const {  shouldBehaveLikeCpolloEscrow } = require('./CpolloBehavior');
-const {  shouldBehaveLikeManagerEscrow } = require('./EscrowManagerBehavior');
+const {  shouldBehaveLikeCpolloWallet } = require('./CpolloBehavior');
+const {  shouldBehaveLikeManagerWallet } = require('./WalletManagerBehavior');
 
 
 require('chai')
@@ -14,7 +14,7 @@ require('chai')
   .should();
 
 
-contract('DevEthEscrow', function ([_, cpollo , dev, notDev, teamWallet, escrowManager, notEscrowManager, ...otherAccounts]) {
+contract('DevEthWallet', function ([_, cpollo , dev, notDev, teamWallet, walletManager, notWalletManager, ...otherAccounts]) {
   const amountLimit = 100;
   const  amount = ether(500); 
   beforeEach(async function () {
@@ -24,21 +24,21 @@ contract('DevEthEscrow', function ([_, cpollo , dev, notDev, teamWallet, escrowM
     
     // One month
     const timeStampInterval = (await time.latest()) + time.duration.weeks(4);
-    this.contract = await DevEthEscrowMock.new(
+    this.contract = await DevEthWalletMock.new(
                             this.devContract.address,                  
                             ether(amountLimit),
                             timeStampInterval,  
                             teamWallet,
                             this.cpolloContract.address, 
-                            escrowManager,
+                            walletManager,
                             { from: cpollo, value: amount});
   });
  
 
-  shouldBehaveLikeCpolloEscrow (cpollo, teamWallet, amount);
-  shouldBehaveLikeManagerEscrow(dev, notDev, escrowManager, notEscrowManager, amountLimit);
+  shouldBehaveLikeCpolloWallet (cpollo, teamWallet, amount);
+  shouldBehaveLikeManagerWallet(dev, notDev, walletManager, notWalletManager, amountLimit);
 
-  describe('Eth Escrow Behavior', function () {
+  describe('Eth Wallet Behavior', function () {
     context('Cpollo features', function () {
       it('get correct amount transfered', async function () {        
         (await web3.eth.getBalance(this.contract.address)).should.be.bignumber.equal(amount);
