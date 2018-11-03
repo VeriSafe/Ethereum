@@ -9,16 +9,21 @@ require('chai')
   .use(require('chai-bignumber')(BigNumber))
   .should();
 
-function shouldBehaveLikeAirdrop (primary, [payee1, payee2]) {
+function shouldBehaveLikeKYCAirdrop (primary, [payee1, payee2], nonKYC) {
   const amount = ether(42.0);
 
   describe('as an airdrop', function () {
     describe('deposits', function () {
-      it('deposit tokens', async function () {
+      
+      it('deposit tokens in KYC user', async function () {
         await this.airdrop.deposit(payee1, amount, { from: primary});
 
 
         (await this.airdrop.depositsOf(payee1)).should.be.bignumber.equal(amount);
+      });
+      it('can not deposit tokens in non KYC user', async function () {
+        await shouldFail.reverting(this.airdrop.deposit(nonKYC, amount, { from: primary}));
+
       });
 
       it('cannot  accept an empty deposit', async function () {
@@ -85,5 +90,5 @@ function shouldBehaveLikeAirdrop (primary, [payee1, payee2]) {
 }
 
 module.exports = {
-  shouldBehaveLikeAirdrop,
+  shouldBehaveLikeKYCAirdrop,
 };

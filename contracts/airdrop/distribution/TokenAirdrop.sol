@@ -25,15 +25,22 @@ contract TokenAirdrop is Airdrop {
         _token = token;
         _wallet = wallet;
     }
+
+    function tokenFunds() public returns (uint256){
+        return _token.balanceOf(address(this)); 
+    }
     /**
    *
-   * @dev In order to deposit make sure Airdrop contract have sufficient token funds
+   * @dev Make sure Contract have sufficient funds to do withdraw
    */
-    function _preDeposit(address sender, uint256 amount) internal { 
-        super._preDeposit(sender, amount);
-        require(_totalDeposits.sub(totalAirdrops()) >= _token.balanceOf(address(this)), "You must have sufficient tokens to do airdrop");
+    function _preWithdraw(address sender, uint256 amount) internal { 
+        require(tokenFunds() >= amount, "You must have sufficient tokens to do airdrop");
+        super._preWithdraw(sender, amount);
     }
-
+   /**
+    *
+    * @dev Withdraw token funds to sender. 
+    */
     function _withdraw(address sender, uint256 amount) internal {
         super._withdraw(sender, amount);
         _token.safeTransfer(sender, amount);
@@ -44,6 +51,4 @@ contract TokenAirdrop is Airdrop {
     function claimFunds() public onlyPrimary {
         _token.safeTransfer(_wallet, _token.balanceOf(address(this)));
     }
-
-
 }
