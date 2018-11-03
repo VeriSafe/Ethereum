@@ -15,7 +15,7 @@ contract EthEscrow is CpolloEscrow {
  
     using SafeMath for uint256;
     /**
-    * @dev Transfer tokens to destination payed
+    * @dev Transfer eth to destination payed
     * @param payee The destination address of the funds.
     */
     function _transfer(address payee, uint256 amount) internal {
