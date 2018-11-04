@@ -1,20 +1,20 @@
 // solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "./CpolloEscrow.sol";
+import "./CpolloWallet.sol";
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/SafeERC20.sol";
 /**
- * @title TokenEscrow
- * @dev Escrow contract that holds token funds for a specific role. Only Escrow managers can transfer funds.
+ * @title TokenWallet
+ * @dev Wallet contract that holds token funds for a specific role. Only Wallet managers can transfer funds.
  * 
  */
-contract TokenEscrow is CpolloEscrow {
+contract TokenWallet is CpolloWallet {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
-    // The token funds escrow 
+    // The token funds Wallet 
     IERC20 private _token;
   /**
    * @param token Address of the token 

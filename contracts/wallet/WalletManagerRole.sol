@@ -3,50 +3,50 @@ pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 
-import "./BaseEscrow.sol";
+import "./BaseWallet.sol";
 
 
-contract EscrowManagerRole is BaseEscrow {
+contract WalletManagerRole is BaseWallet {
     using Roles for Roles.Role;
 
-    event EscrowManagerAdded(address indexed account);
-    event EscrowManagerRemoved(address indexed account);
+    event WalletManagerAdded(address indexed account);
+    event WalletManagerRemoved(address indexed account);
 
-    Roles.Role internal _escrowManager;
+    Roles.Role internal _walletManager;
 
     constructor(address manager) public {
-        _addEscrowManager(manager);
+        _addWalletManager(manager);
     }
 
-    modifier onlyEscrowManager() {
-        require(isEscrowManager(msg.sender), "Only EscrowManager Members allowed");
+    modifier onlyWalletManager() {
+        require(isWalletManager(msg.sender), "Only WalletManager Members allowed");
         _;
     }
 
-    function isEscrowManager(address account) public view returns (bool) {
-        return _escrowManager.has(account);
+    function isWalletManager(address account) public view returns (bool) {
+        return _walletManager.has(account);
     }
 
-    function addEscrowManager(address account) public onlyEscrowManager {
-        _addEscrowManager(account);
+    function addWalletManager(address account) public onlyWalletManager {
+        _addWalletManager(account);
     }
 
-    function renounceEscrowManager() public {
-        _removeEscrowManager(msg.sender);
+    function renounceWalletManager() public {
+        _removeWalletManager(msg.sender);
     }
 
-    function _addEscrowManager(address account) internal {
-        _escrowManager.add(account);
-        emit EscrowManagerAdded(account);
+    function _addWalletManager(address account) internal {
+        _walletManager.add(account);
+        emit WalletManagerAdded(account);
     }
     /**
     * @dev Can be overriden. The overriding function
-    * should call super._removeEscrowManager(account) to ensure the chain of transfer is
+    * should call super._removeWalletManager(account) to ensure the chain of transfer is
     * executed entirely.
    */
-    function _removeEscrowManager(address account) internal {
-        _escrowManager.remove(account);
-        emit EscrowManagerRemoved(account);
+    function _removeWalletManager(address account) internal {
+        _walletManager.remove(account);
+        emit WalletManagerRemoved(account);
     }
      /**
    * @dev Can be overridden to add pre transfer logic. The overriding function
@@ -55,7 +55,7 @@ contract EscrowManagerRole is BaseEscrow {
    */
     function _preTransfer(address payee, uint256 amount) internal {
         super._preTransfer(payee, amount);
-        require(_escrowManager.has(msg.sender), "You must be a Escrow Manager to do transfers in this Escrow");      
+        require(_walletManager.has(msg.sender), "You must be a Wallet Manager to do transfers in this Wallet");      
     }
 
 

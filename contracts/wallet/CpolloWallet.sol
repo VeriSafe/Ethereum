@@ -1,13 +1,13 @@
 // solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "./BaseEscrow.sol";
+import "./BaseWallet.sol";
 import "../access/ICpolloRoles.sol";
 /**
- * @title CpolloEscrow
- * @dev Cpollo Escrow holds all the logic to manage and avoid scams in projects escrows 
+ * @title CpolloWallet
+ * @dev Cpollo Wallet holds all the logic to manage and avoid scams in projects Wallets 
  */
-contract CpolloEscrow is BaseEscrow {
+contract CpolloWallet is BaseWallet {
     enum State { Active, Freeze, Scam }
 
     event ScamAlert(address indexed account);
@@ -30,7 +30,7 @@ contract CpolloEscrow is BaseEscrow {
         _;
     }
     /**
-    * @return the current state of the escrow.
+    * @return the current state of the Wallet.
     */
     function state() public view returns (State) {
         return _state;
@@ -52,24 +52,24 @@ contract CpolloEscrow is BaseEscrow {
         emit ScamAlert(msg.sender);
     }
     /**
-    * @dev Freeze escrow for Cpollo start investigate.
+    * @dev Freeze Wallet for Cpollo start investigate.
     */
     function freeze() public onlyCpollo {
         _state = State.Freeze;
         emit FreezeAlert(msg.sender);
     } 
      /**
-    * @dev UnFreeze escrow when investigation finish. Only Cpollo members can call
+    * @dev UnFreeze Wallet when investigation finish. Only Cpollo members can call
     */
     function unFreeze() public onlyCpollo {
-        require(_state == State.Freeze, "Escrow must be freezed");
+        require(_state == State.Freeze, "Wallet must be freezed");
         _state = State.Active;
         emit unFreezeAlert(msg.sender);
     } 
 
     function _preTransfer(address payee, uint256 amount) internal {
         super._preTransfer(payee, amount);
-        require(_state == State.Active, "Escrow must be active");
+        require(_state == State.Active, "Wallet must be active");
     }
 
     /**

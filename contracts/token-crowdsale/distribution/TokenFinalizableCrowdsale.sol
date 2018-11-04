@@ -1,14 +1,14 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "../validation/TimedCrowdsale.sol";
+import "../validation/TokenTimedCrowdsale.sol";
 
 /**
- * @title FinalizableCrowdsale
+ * @title TokenFinalizableCrowdsale
  * @dev Extension of Crowdsale with a one-off finalization action, where one
  * can do extra work after finishing.
  */
-contract FinalizableCrowdsale is TimedCrowdsale {
+contract TokenFinalizableCrowdsale is TokenTimedCrowdsale {
     using SafeMath for uint256;
 
     bool private _finalized;

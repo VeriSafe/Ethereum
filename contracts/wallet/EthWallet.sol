@@ -2,16 +2,16 @@
 pragma solidity ^0.4.24;
 
 
-import "./CpolloEscrow.sol";
+import "./CpolloWallet.sol";
 // solium-disable linebreak-style
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /**
- * @title EthEscrow
- * @dev Eth escrow is a contract that holds eth funds destined for a specific role. The funds are supervised by Cpollo. 
+ * @title EthWallet
+ * @dev Eth Wallet is a contract that holds eth funds destined for a specific role. The funds are supervised by Cpollo. 
  * 
  */
-contract EthEscrow is CpolloEscrow {
+contract EthWallet is CpolloWallet {
  
     using SafeMath for uint256;
     /**

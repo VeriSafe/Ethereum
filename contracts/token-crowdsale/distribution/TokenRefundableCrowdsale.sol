@@ -1,22 +1,22 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
-import "./FinalizableCrowdsale.sol";
-import "openzeppelin-solidity/contracts/payment/RefundEscrow.sol";
+import "./TokenFinalizableCrowdsale.sol";
+import "../../payment/escrow/TokenRefundEscrow.sol";
 
 /**
  * @title RefundableCrowdsale
  * @dev Extension of Crowdsale contract that adds a funding goal, and
  * the possibility of users getting a refund if goal is not met.
  */
-contract RefundableCrowdsale is FinalizableCrowdsale {
+contract TokenRefundableCrowdsale is TokenFinalizableCrowdsale {
     using SafeMath for uint256;
 
     // minimum amount of funds to be raised in weis
     uint256 private _goal;
 
     // refund escrow used to hold funds while crowdsale is running
-    RefundEscrow private _escrow;
+    TokenRefundEscrow private _escrow;
 
     /**
     * @dev Constructor, creates RefundEscrow.
@@ -24,7 +24,7 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
     */
     constructor(uint256 goal) public {
         require(goal > 0);
-        _escrow = new RefundEscrow(wallet());
+        _escrow = new TokenRefundEscrow(wallet(), tokenExchange());
         _goal = goal;
     }
 
@@ -33,6 +33,12 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
     */
     function goal() public view returns(uint256) {
         return _goal;
+    }
+     /**
+    * @return minimum amount of funds to be raised in wei.
+    */
+    function escrow() public view returns(address) {
+        return address(_escrow);
     }
 
     /**
@@ -51,7 +57,7 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
     * @return Whether funding goal was reached
     */
     function goalReached() public view returns (bool) {
-        return weiRaised() >= _goal;
+        return tokenRaised() >= _goal;
     }
 
     /**
@@ -71,8 +77,9 @@ contract RefundableCrowdsale is FinalizableCrowdsale {
     /**
     * @dev Overrides Crowdsale fund forwarding, sending funds to escrow.
     */
-    function _forwardFunds() internal {
-        _escrow.deposit.value(msg.value)(msg.sender);
+    function _forwardTokenFunds(address beneficiary, uint256 amount) internal {
+        tokenExchange().safeTransferFrom(beneficiary, escrow(), amount);
+        _escrow.deposit(beneficiary, amount);
     }
 
 }

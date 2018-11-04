@@ -1,7 +1,7 @@
 // solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "../validation/TimedCrowdsale.sol";
+import "../validation/TokenTimedCrowdsale.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
@@ -9,7 +9,7 @@ import "openzeppelin-solidity/contracts/math/SafeMath.sol";
  * @title PostDeliveryCrowdsale
  * @dev Crowdsale that locks tokens from withdrawal until it ends.
  */
-contract PostDeliveryCrowdsale is TimedCrowdsale {
+contract TokenPostDeliveryCrowdsale is TokenTimedCrowdsale {
     using SafeMath for uint256;
 
     mapping(address => uint256) private _balances;
