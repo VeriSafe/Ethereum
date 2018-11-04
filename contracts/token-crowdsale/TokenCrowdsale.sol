@@ -69,7 +69,7 @@ contract TokenCrowdsale {
         _rate = rate;
         _wallet = wallet;
         _token = token;
-        _tokenExchange = _tokenExchange;
+        _tokenExchange = tokenExchange;
     }
 
     // -----------------------------------------
@@ -116,6 +116,10 @@ contract TokenCrowdsale {
     function buyTokens(address beneficiary, uint256 amount) public {
    
         _preValidatePurchase(beneficiary, amount);
+        /**
+        * forward funds to the destination wallet
+         */
+        _forwardTokenFunds(beneficiary, amount);
 
         // calculate token amount to be created
         uint256 tokens = _getTokenAmount(amount);
@@ -124,6 +128,7 @@ contract TokenCrowdsale {
         _tokenRaised = _tokenRaised.add(amount);
 
         _processPurchase(beneficiary, tokens);
+        
         emit TokensPurchased(
             msg.sender,
             beneficiary,
@@ -133,7 +138,7 @@ contract TokenCrowdsale {
 
         _updatePurchasingState(beneficiary, amount);
 
-        _forwardTokenFunds(beneficiary, amount);
+       
         _postValidatePurchase(beneficiary, amount);
     }
 
@@ -205,11 +210,11 @@ contract TokenCrowdsale {
     /**
     * @dev Override for extensions that require an internal state to check for validity (current user contributions, etc.)
     * @param beneficiary Address receiving the tokens
-    * @param weiAmount Value in wei involved in the purchase
+    * @param tokenAmount Value in tokens involved in the purchase
     */
     function _updatePurchasingState(
         address beneficiary,
-        uint256 weiAmount
+        uint256 tokenAmount
     )
       internal
     {
@@ -231,6 +236,6 @@ contract TokenCrowdsale {
     * @dev Determines how Tokens are stored/forwarded on purchases.
     */
     function _forwardTokenFunds(address beneficiary, uint256 amount) internal {
-        _token.safeTransferFrom(beneficiary, _wallet, amount);
+        _tokenExchange.safeTransferFrom(beneficiary, _wallet, amount);
     }
 }

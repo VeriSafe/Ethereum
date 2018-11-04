@@ -1,17 +1,17 @@
 // solium-disable linebreak-style
 pragma solidity ^0.4.24;
 
-import "./BaseEscrow.sol";
+import "./BaseWallet.sol";
 import "../access/IMarketingRoles.sol";
 
 /**
- * @title DevTokenEscrow
- * @dev This is the escrow that holds funds for Marketing. 
+ * @title DevTokenWallet
+ * @dev This is the Wallet that holds funds for Marketing. 
  *  Only individuals registered on the marketing team are allowed to receive token funds. 
  *  When there are signals of a scam, Cpollo will freeze the funds to start the auditing process. 
  * If these signals are right, Cpollo will return funds to the team wallet.
  */
-contract MarketingTokenEscrow is BaseEscrow {
+contract MarketingTokenWallet is BaseWallet {
 
     IMarketingRoles private _marketeer;
     

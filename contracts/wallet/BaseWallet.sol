@@ -4,16 +4,16 @@ pragma solidity ^0.4.24;
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 /**
- * @title BaseEscrow
- * @dev Base escrow handles funds with destinations to specific roles.
- * This contract implements a base escrow functionality in its most fundamental form and can be extended to provide 
+ * @title BaseWallet
+ * @dev Base Wallet handles funds with destinations to specific roles.
+ * This contract implements a base Wallet- functionality in its most fundamental form and can be extended to provide 
  * additional functionality and/or custom behavior. 
  * The external interface represents the basic interface to transfer funds to the role destination. 
- * They are *not* intended to be modified / overridden. The internal interface conforms the extensible and modifiable surface of Escrows. 
+ * They are *not* intended to be modified / overridden. The internal interface conforms the extensible and modifiable surface of Wallets. 
  * Override the methods to add functionality. Consider using 'super' where appropriate to concatenate behavior.
  * 
  */
-contract BaseEscrow {
+contract BaseWallet {
     address public creator;
     using SafeMath for uint256;
     

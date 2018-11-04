@@ -2,22 +2,22 @@
 pragma solidity ^0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "../escrow/CpolloEscrow.sol";
-import "../escrow/BaseEscrow.sol";
+import "../wallet/CpolloWallet.sol";
+import "../wallet/BaseWallet.sol";
 import "../access/ICpolloRoles.sol";
 /**
- * @title CpolloEscrowMock
- * @dev Escrow that holds funds for development, only registered Devs are allowed to receive token funds,
+ * @title CpolloWalletMock
+ * @dev Wallet that holds funds for development, only registered Devs are allowed to receive token funds,
  * when there are signals of Scam, Cpollo will freeze the funds to start auditing. If these signals are right, 
  * Cpollo will return funds to the team wallet.
 */
-contract CpolloEscrowMock is  CpolloEscrow {
+contract CpolloWalletMock is  CpolloWallet {
     constructor(
             address teamWallet, 
             ICpolloRoles cpollo
         )   
-        BaseEscrow()
-        CpolloEscrow(teamWallet, cpollo) 
+        BaseWallet()
+        CpolloWallet(teamWallet, cpollo) 
         public {
             
     }

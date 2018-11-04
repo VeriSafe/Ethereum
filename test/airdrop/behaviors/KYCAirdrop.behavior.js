@@ -63,9 +63,7 @@ function shouldBehaveLikeKYCAirdrop (primary, [payee1, payee2], nonKYC) {
       it('can withdraw payments', async function () {
 
         await this.airdrop.deposit(payee1, amount, { from: primary});
-        await this.airdrop.withdraw({ from: payee1 });
-
-        
+        await this.airdrop.withdraw({ from: payee1 });      
         (await this.airdrop.depositsOf(payee1)).should.be.bignumber.equal(0);
 
        
