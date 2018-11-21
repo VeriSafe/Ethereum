@@ -18,7 +18,8 @@
     "console": "truffle console",
     "coverage": "scripts/coverage.sh",
     "version": "scripts/version.js",
-    "deploy:testnet": "truffle exec scripts/deployTestnet.js --network ropsten"
+    "deploy:testnet": "truffle exec scripts/deployTestnet.js --network ropsten",
+    "flat-contracts": "sol-merger --append \"Flat\" \"./contracts/**/*.sol\""
   },
   "repository": {
     "type": "git",
@@ -51,6 +52,7 @@
     "eslint-plugin-standard": "^3.1.0",
     "ethjs-abi": "^0.2.1",
     "ganache-cli": "6.1.0",
+    "sol-merger": "^0.1.2",
     "solidity-coverage": "^0.5.4",
     "solium": "^1.1.8",
     "truffle": "^4.1.13",
